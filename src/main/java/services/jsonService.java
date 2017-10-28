@@ -22,5 +22,6 @@ public abstract class jsonService {
     }
 
     abstract Object mapJsonToObject(String json)throws IOException;
+
     abstract Boolean isValid(Object obj);
 }

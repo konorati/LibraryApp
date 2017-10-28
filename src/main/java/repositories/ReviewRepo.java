@@ -26,12 +26,17 @@ public class ReviewRepo extends BaseDao {
         return reviewDao.queryForId(id);
     }
 
+    public List<Review> getReviews(String bookId) throws SQLException {
+        createDao();
+        return reviewDao.queryBuilder().where().eq("book_id", bookId).query();
+    }
+
     public int updateReview(Review review) throws SQLException {
         createDao();
         return reviewDao.update(review);
     }
 
-    public int createBook(Review review) throws SQLException {
+    public int createReview(Review review) throws SQLException {
         createDao();
         return reviewDao.create(review);
     }

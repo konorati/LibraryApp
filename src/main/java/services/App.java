@@ -17,12 +17,16 @@ public class App {
     public static void main(String[] args) {
 
         Logger logger = LoggerFactory.getLogger(UserService.class);
+
         //Create Services
         UserService userService = new UserService();
         userService.setupHttpCalls();
 
         BookService bookService = new BookService();
         bookService.setupHttpCalls();
+
+        ReviewService reviewService = new ReviewService();
+        reviewService.setupHttpCalls();
 
 
         UserRepo ur = new UserRepo();

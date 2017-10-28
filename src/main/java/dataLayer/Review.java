@@ -1,5 +1,6 @@
 package dataLayer;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import lombok.Data;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -18,4 +19,9 @@ public @Data class Review {
 
     @DatabaseField(canBeNull = false)
     String review;
+
+    @JsonGetter("book")
+    public int getBookId() {
+        return book.getId();
+    }
 }

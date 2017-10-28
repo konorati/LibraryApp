@@ -1,5 +1,6 @@
 package dataLayer;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.j256.ormlite.dao.BaseForeignCollection;
 import lombok.Data;
 import com.j256.ormlite.field.DatabaseField;
