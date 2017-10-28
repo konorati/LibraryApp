@@ -6,6 +6,7 @@ import dataLayer.Review;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +20,7 @@ import static spark.Spark.*;
 
 public class ReviewService extends jsonService {
 
-    public void setupHttpCalls() {
+    public void setupHttpCalls() throws SQLException{
 
         ReviewRepo rr = new ReviewRepo();
         BookRepo br = new BookRepo();

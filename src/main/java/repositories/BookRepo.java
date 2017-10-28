@@ -10,34 +10,26 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class BookRepo extends BaseDao {
-    Dao<Book,String> bookDao;
+    private Dao<Book,String> bookDao;
+    private JdbcConnectionSource con = getConnectionSource();
 
-    JdbcConnectionSource con = getConnectionSource();
-
-    @Override
-    void createDao() throws SQLException {
-        if (bookDao == null) {
-            bookDao = DaoManager.createDao(con, Book.class);
-        }
+    public BookRepo() throws SQLException{
+        bookDao = DaoManager.createDao(con, Book.class);
     }
 
     public List<Book> getAllBooks() throws SQLException {
-        createDao();
         return bookDao.queryForAll();
     }
 
     public Book getBook(String id) throws SQLException {
-        createDao();
         return bookDao.queryForId(id);
     }
 
     public int updateBook(Book book) throws SQLException {
-        createDao();
         return bookDao.update(book);
     }
 
     public int createBook(Book book) throws SQLException {
-        createDao();
         return bookDao.create(book);
     }
 

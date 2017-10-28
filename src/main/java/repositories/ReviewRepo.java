@@ -10,34 +10,26 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ReviewRepo extends BaseDao {
-    Dao<Review,String> reviewDao;
+    private Dao<Review,String> reviewDao;
+    private JdbcConnectionSource con = getConnectionSource();
 
-    JdbcConnectionSource con = getConnectionSource();
-
-    @Override
-    void createDao() throws SQLException {
-        if (reviewDao == null) {
-            reviewDao = DaoManager.createDao(con, Review.class);
-        }
+    public ReviewRepo() throws SQLException{
+        reviewDao = DaoManager.createDao(con, Review.class);
     }
 
     public Review getReview(String id) throws SQLException {
-        createDao();
         return reviewDao.queryForId(id);
     }
 
     public List<Review> getReviews(String bookId) throws SQLException {
-        createDao();
         return reviewDao.queryBuilder().where().eq("book_id", bookId).query();
     }
 
     public int updateReview(Review review) throws SQLException {
-        createDao();
         return reviewDao.update(review);
     }
 
     public int createReview(Review review) throws SQLException {
-        createDao();
         return reviewDao.create(review);
     }
 }

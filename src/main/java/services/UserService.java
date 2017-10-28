@@ -24,9 +24,11 @@ import java.sql.SQLException;
 
 public class UserService extends jsonService{
 
-    UserRepo ur = new UserRepo();
 
-    public void setupHttpCalls() {
+
+    public void setupHttpCalls() throws SQLException{
+        UserRepo ur = new UserRepo();
+
         // get user with matching username & password (using HTTP get method)
         get("/users", (request, response) -> {
             String username = request.queryParams("username");
@@ -52,15 +54,12 @@ public class UserService extends jsonService{
                 }
                 ur.createUser(u);
                 response.status(HTTP_CREATED);
-                //response.type("application/json");
                 return serializeObject(u);
             } catch (JsonParseException ex) {
                 response.status(HTTP_BAD_REQUEST);
                 return serializeObject(new ResponseError(ex));
             }
         });
-
-
     }
 
     @Override

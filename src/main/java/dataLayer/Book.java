@@ -27,6 +27,9 @@ public class Book {
     @ForeignCollectionField
     Collection<Review> reviews;
 
+    @DatabaseField(defaultValue = "true", canBeNull = false)
+    @Getter @Setter Boolean available = true;
+
     public List<Review> getReviews(){
         if(reviews == null) { return new ArrayList<Review>(); }
         return new ArrayList<Review>(reviews);
@@ -35,7 +38,4 @@ public class Book {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-
-    @DatabaseField(defaultValue = "true", canBeNull = false)
-    @Getter @Setter Boolean available = true;
 }

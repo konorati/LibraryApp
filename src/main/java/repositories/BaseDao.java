@@ -11,7 +11,7 @@ import java.sql.SQLException;
 /**
  *
  */
-public abstract class BaseDao {
+public class BaseDao {
     private static Logger logger = LoggerFactory.getLogger("BaseDao");
 
     private static String databaseUrl = "jdbc:mysql://localhost:3306/library";
@@ -31,6 +31,4 @@ public abstract class BaseDao {
             return null;
         }
     }
-
-    abstract void createDao() throws SQLException;
 }

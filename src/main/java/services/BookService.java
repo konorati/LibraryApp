@@ -5,6 +5,7 @@ import dataLayer.Book;
 import repositories.BookRepo;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -13,10 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static java.net.HttpURLConnection.*;
 import static spark.Spark.*;
 
-public class BookService extends jsonService{
-    BookRepo br = new BookRepo();
+public class BookService extends jsonService {
 
-    public void setupHttpCalls() {
+    public void setupHttpCalls() throws SQLException{
+        BookRepo br = new BookRepo();
+
         get("/books", (request, response) -> {
             List<Book> books = br.getAllBooks();
             response.type("application/json");
