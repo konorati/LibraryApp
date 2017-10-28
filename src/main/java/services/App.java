@@ -1,5 +1,7 @@
 package services;
 
+import static spark.Spark.*;
+
 import com.j256.ormlite.logger.Log;
 import com.j256.ormlite.logger.Logger;
 import com.j256.ormlite.logger.LoggerFactory;
@@ -16,6 +18,10 @@ public class App {
 
         Logger logger = LoggerFactory.getLogger(UserService.class);
         //Create Services
+        UserService userService = new UserService();
+        userService.setupHttpCalls();
+
+
         UserRepo ur = new UserRepo();
         //Create Tables
         try {
