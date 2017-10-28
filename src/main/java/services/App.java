@@ -21,6 +21,9 @@ public class App {
         UserService userService = new UserService();
         userService.setupHttpCalls();
 
+        BookService bookService = new BookService();
+        bookService.setupHttpCalls();
+
 
         UserRepo ur = new UserRepo();
         //Create Tables
@@ -32,6 +35,10 @@ public class App {
             logger.log(Log.Level.ERROR, "Could not add tables " + ex.getMessage());
             ex.printStackTrace();
         }
+
+        after((req, res) -> {
+            res.type("application/json");
+        });
 
         //get("/hello", (req, res) -> { return "Hello World!"; } );
     }

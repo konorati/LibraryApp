@@ -16,6 +16,7 @@ public abstract class jsonService {
             mapper.writeValue(sw,obj);
             return sw.toString();
         } catch (IOException e){
+            e.printStackTrace();
             throw new RuntimeException("IOException from a StringWriter?");
         }
     }

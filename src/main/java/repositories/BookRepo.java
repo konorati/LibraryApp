@@ -7,6 +7,7 @@ import dataLayer.Book;
 import dataLayer.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class BookRepo extends BaseDao {
     Dao<Book,String> bookDao;
@@ -18,6 +19,11 @@ public class BookRepo extends BaseDao {
         if (bookDao == null) {
             bookDao = DaoManager.createDao(con, Book.class);
         }
+    }
+
+    public List<Book> getAllBooks() throws SQLException {
+        createDao();
+        return bookDao.queryForAll();
     }
 
     public Book getBook(String id) throws SQLException {

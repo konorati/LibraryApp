@@ -33,7 +33,7 @@ public class UserService extends jsonService{
             String password = request.queryParams("password");
             User u = ur.getUser(username, password);
 
-            response.type("application/json");
+            //response.type("application/json");
             if(u == null) {
                 response.status(HTTP_BAD_REQUEST);
                 return serializeObject(new ResponseError("No user with given username and password found"));
@@ -52,7 +52,7 @@ public class UserService extends jsonService{
                 }
                 ur.createUser(u);
                 response.status(HTTP_CREATED);
-                response.type("application/json");
+                //response.type("application/json");
                 return serializeObject(u);
             } catch (JsonParseException ex) {
                 response.status(HTTP_BAD_REQUEST);
