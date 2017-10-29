@@ -19,14 +19,14 @@ public class BookService extends jsonService {
     public void setupHttpCalls() throws SQLException{
         BookRepo br = new BookRepo();
 
-        get("/books", (request, response) -> {
+        get("api/books", (request, response) -> {
             List<Book> books = br.getAllBooks();
             response.type("application/json");
             response.status(HTTP_OK);
             return serializeObject(books);
         });
 
-        get("/books/:id", (request, response) -> {
+        get("api/books/:id", (request, response) -> {
             Book b = br.getBook(request.params(":id"));
             if(b == null) {
                 response.status(HTTP_BAD_REQUEST);
@@ -36,7 +36,7 @@ public class BookService extends jsonService {
             return serializeObject(b);
         });
 
-        post("/books", (request, response) -> {
+        post("api/books", (request, response) -> {
             try {
                 Book b = mapJsonToObject(request.body());
                 if (!isValid(b)) {
@@ -57,7 +57,7 @@ public class BookService extends jsonService {
         });
 
         //TODO: Should make this create or update (not just update)
-        put("/books/:id", (request, response) -> {
+        put("api/books/:id", (request, response) -> {
             try {
                 Book b = mapJsonToObject(request.body());
                 if (!isValid(b)) {
@@ -75,7 +75,18 @@ public class BookService extends jsonService {
             } catch (Exception ex) {
                 response.status(HTTP_INTERNAL_ERROR);
                 return serializeObject(new ResponseError(ex));
-        }
+            }
+        });
+
+        delete("api/books/:id", (request, response) -> {
+            Book b = br.getBook(request.params(":id"));
+            if(b == null) {
+                response.status(HTTP_BAD_REQUEST);
+                return serializeObject(new ResponseError("No book with given id found"));
+            }
+            response.status(HTTP_OK);
+            br.deleteBook(b);
+            return "";
         });
     }
 

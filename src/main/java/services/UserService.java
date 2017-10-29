@@ -1,8 +1,6 @@
 package services;
 
-import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
-import static java.net.HttpURLConnection.HTTP_CREATED;
-import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.*;
 import static spark.Spark.*;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -30,7 +28,7 @@ public class UserService extends jsonService{
         UserRepo ur = new UserRepo();
 
         // get user with matching username & password (using HTTP get method)
-        get("/users", (request, response) -> {
+        get("api/users", (request, response) -> {
             String username = request.queryParams("username");
             String password = request.queryParams("password");
             User u = ur.getUser(username, password);
@@ -45,7 +43,7 @@ public class UserService extends jsonService{
         });
 
         // insert a user (using HTTP post method)
-        post("/users", (request, response) -> {
+        post("api/users", (request, response) -> {
             try {
                 User u = mapJsonToObject(request.body());
                 if (!isValid(u)) {
@@ -57,6 +55,35 @@ public class UserService extends jsonService{
                 return serializeObject(u);
             } catch (JsonParseException ex) {
                 response.status(HTTP_BAD_REQUEST);
+                return serializeObject(new ResponseError(ex));
+            }
+        });
+
+        put("api/users/:uname", (request, response) -> {
+            try {
+                User u = mapJsonToObject(request.body());
+                if (!isValid(u)) {
+                    response.status(HTTP_BAD_REQUEST);
+                    return serializeObject(new ResponseError("Could not update User with provided data"));
+                }
+                String uname = request.params(":uname");
+                System.out.println("Username = " + uname);
+                if(ur.getUserByUsername(uname) == null) {
+                    response.status(HTTP_NOT_FOUND);
+                    return serializeObject(new ResponseError("Error: No user with username: %s found", uname));
+                }
+                if(!u.getUsername().equals(uname) && ur.getUserByUsername(u.getUsername()) != null) {
+                    response.status(HTTP_BAD_REQUEST);
+                    return serializeObject(new ResponseError("Username: %s is already in use", u.getUsername()));
+                }
+                ur.updateUser(u);
+                response.status(HTTP_OK);
+                return serializeObject(u);
+            }catch (JsonParseException ex) {
+                response.status(HTTP_BAD_REQUEST);
+                return serializeObject(new ResponseError(ex));
+            } catch (Exception ex) {
+                response.status(HTTP_INTERNAL_ERROR);
                 return serializeObject(new ResponseError(ex));
             }
         });

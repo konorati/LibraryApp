@@ -33,4 +33,8 @@ public class BookRepo extends BaseDao {
         return bookDao.create(book);
     }
 
+    public int deleteBook(Book b) throws SQLException {
+        return bookDao.delete(b);
+    }
+
 }

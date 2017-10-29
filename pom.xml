@@ -7,6 +7,11 @@
     <groupId>com.kristin.app</groupId>
     <artifactId>library-app</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>library-app</name>
+    <description>Basic Library App Demo Project</description>
+
     <build>
         <plugins>
             <plugin>

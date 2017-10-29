@@ -25,14 +25,14 @@ public class ReviewService extends jsonService {
         ReviewRepo rr = new ReviewRepo();
         BookRepo br = new BookRepo();
 
-        get("/books/:bookId/reviews",(request, response) -> {
+        get("api/books/:bookId/reviews",(request, response) -> {
             List<Review> reviews = rr.getReviews(request.params(":bookId"));
             response.type("application/json");
             response.status(HTTP_OK);
             return serializeObject(reviews);
         });
 
-        post("/books/:bookId/reviews", (request, response) -> {
+        post("api/books/:bookId/reviews", (request, response) -> {
             try {
                 Review r = mapJsonToObject(request.body());
                 r.setBook(br.getBook(request.params(":bookId")));

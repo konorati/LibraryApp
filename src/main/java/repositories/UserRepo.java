@@ -26,6 +26,14 @@ public class UserRepo extends BaseDao {
     }
 
     public User getUser(String username, String password) throws SQLException{
-        return userDao.queryBuilder().where().eq("username", password).and().eq("password", password).queryForFirst();
+        return userDao.queryBuilder().where().eq("username", username).and().eq("password", password).queryForFirst();
+    }
+
+    public User getUserByUsername(String username) throws SQLException {
+        return userDao.queryBuilder().where().eq("username", username).queryForFirst();
+    }
+
+    public int updateUser(User u) throws SQLException{
+        return userDao.update(u);
     }
 }
