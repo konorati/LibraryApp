@@ -27,8 +27,8 @@ public class Book {
     @ForeignCollectionField
     Collection<Review> reviews;
 
-    @DatabaseField(defaultValue = "true", canBeNull = false)
-    @Getter @Setter Boolean available = true;
+    @DatabaseField
+    @Getter @Setter String username;
 
     public List<Review> getReviews(){
         if(reviews == null) { return new ArrayList<Review>(); }

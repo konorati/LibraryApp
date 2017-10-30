@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import repositories.UserRepo;
 
 import static java.net.HttpURLConnection.*;
 import static spark.Spark.*;
@@ -18,6 +19,7 @@ public class BookService extends jsonService {
 
     public void setupHttpCalls() throws SQLException{
         BookRepo br = new BookRepo();
+        UserRepo ur = new UserRepo();
 
         get("api/books", (request, response) -> {
             List<Book> books = br.getAllBooks();
@@ -43,6 +45,10 @@ public class BookService extends jsonService {
                     response.status(HTTP_BAD_REQUEST);
                     return serializeObject(new ResponseError("Could not create Book with provided data"));
                 }
+                if(b.getUsername() != null && ur.getUser(b.getUsername()) == null) {
+                    response.status(HTTP_BAD_REQUEST);
+                    return serializeObject(new ResponseError("Could not create Book, provided User does not exist"));
+                }
                 br.createBook(b);
                 response.status(HTTP_CREATED);
                 //response.type("application/json");
@@ -63,6 +69,10 @@ public class BookService extends jsonService {
                 if (!isValid(b)) {
                     response.status(HTTP_BAD_REQUEST);
                     return serializeObject(new ResponseError("Could not update Book with provided data"));
+                }
+                if(b.getUsername() != null && ur.getUser(b.getUsername()) == null) {
+                    response.status(HTTP_BAD_REQUEST);
+                    return serializeObject(new ResponseError("Could not create Book, provided User does not exist"));
                 }
                 int id = Integer.parseInt(request.params(":id"));
                 b.setId(id);
