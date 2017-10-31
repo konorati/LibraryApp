@@ -31,13 +31,36 @@ public class UserService extends jsonService{
         get("api/users", (request, response) -> {
             String username = request.queryParams("username");
             String password = request.queryParams("password");
-            User u = ur.getUser(username, password);
 
-            //response.type("application/json");
+            User u = ur.getUserByUsername(username);
+
             if(u == null) {
                 response.status(HTTP_BAD_REQUEST);
-                return serializeObject(new ResponseError("No user with given username and password found"));
+                return serializeObject(new ResponseError("No user with given username found"));
             }
+
+            // TODO: Move this authentication business into authentication service! api/authentication
+            // This section checks for an incorrect password then locks the user out if they have too many bad attempts
+            // Need to add a chron job that resets this to 0 after x number of minutes/hours
+            // Check for incorrect password update if necessary
+            Boolean incorrectPassword = !u.getPassword().equals(password);
+            if(incorrectPassword) {
+                u.setBadAttempts(u.getBadAttempts() + 1);
+                ur.updateUser(u);
+            }
+
+            // Forbid user from logging in
+            if(u.getBadAttempts() >= 3) {
+                response.status(HTTP_FORBIDDEN);
+                return serializeObject(new ResponseError("Too many incorrect login attempts"));
+            }
+
+            // Reset bad attempts if necessary
+            if(!incorrectPassword && u.getBadAttempts() != 0) {
+                u.setBadAttempts(0);
+                ur.updateUser(u);
+            }
+
             response.status(HTTP_OK);
             return serializeObject(u);
         });
@@ -59,6 +82,7 @@ public class UserService extends jsonService{
             }
         });
 
+        //Update a user
         put("api/users/:uname", (request, response) -> {
             try {
                 User u = mapJsonToObject(request.body());
@@ -66,16 +90,21 @@ public class UserService extends jsonService{
                     response.status(HTTP_BAD_REQUEST);
                     return serializeObject(new ResponseError("Could not update User with provided data"));
                 }
+
+                //Make sure user you are trying to update actually exists
                 String uname = request.params(":uname");
                 System.out.println("Username = " + uname);
                 if(ur.getUserByUsername(uname) == null) {
                     response.status(HTTP_NOT_FOUND);
                     return serializeObject(new ResponseError("Error: No user with username: %s found", uname));
                 }
+
+                //Check for duplicate username
                 if(!u.getUsername().equals(uname) && ur.getUserByUsername(u.getUsername()) != null) {
                     response.status(HTTP_BAD_REQUEST);
                     return serializeObject(new ResponseError("Username: %s is already in use", u.getUsername()));
                 }
+
                 ur.updateUser(u);
                 response.status(HTTP_OK);
                 return serializeObject(u);

@@ -21,6 +21,7 @@ public class BookService extends jsonService {
         BookRepo br = new BookRepo();
         UserRepo ur = new UserRepo();
 
+        // Get all books
         get("api/books", (request, response) -> {
             List<Book> books = br.getAllBooks();
             response.type("application/json");
@@ -28,6 +29,7 @@ public class BookService extends jsonService {
             return serializeObject(books);
         });
 
+        // Get a specific book by id
         get("api/books/:id", (request, response) -> {
             Book b = br.getBook(request.params(":id"));
             if(b == null) {
@@ -38,6 +40,7 @@ public class BookService extends jsonService {
             return serializeObject(b);
         });
 
+        // Add a book
         post("api/books", (request, response) -> {
             try {
                 Book b = mapJsonToObject(request.body());
@@ -62,7 +65,7 @@ public class BookService extends jsonService {
             }
         });
 
-        //TODO: Should make this create or update (not just update)
+        //Update a book
         put("api/books/:id", (request, response) -> {
             try {
                 Book b = mapJsonToObject(request.body());
@@ -88,6 +91,7 @@ public class BookService extends jsonService {
             }
         });
 
+        //Delete a book
         delete("api/books/:id", (request, response) -> {
             Book b = br.getBook(request.params(":id"));
             if(b == null) {
